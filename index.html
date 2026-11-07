@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
   <meta name="format-detection" content="telephone=no" />
-  <title>给我们的爱情</title>
+  <title>老婆专属</title>
   <style>
     :root {
       --rose: #c43b5a;
@@ -314,34 +314,60 @@
       color: rgba(255, 190, 205, 0.7);
       font-size: 13px;
     }
+
+    .music-btn {
+      position: fixed;
+      right: 16px;
+      top: calc(14px + env(safe-area-inset-top));
+      z-index: 20;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255, 180, 195, 0.35);
+      border-radius: 50%;
+      background: rgba(40, 14, 24, 0.55);
+      color: #ffd0da;
+      font-size: 16px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: none;
+      place-items: center;
+      cursor: pointer;
+    }
+    .music-btn.show { display: grid; }
+    .music-btn.on {
+      box-shadow: 0 0 0 3px rgba(255, 143, 163, 0.22);
+      animation: pulse 2.2s ease-in-out infinite;
+    }
   </style>
 </head>
 <body>
+  <audio id="bgm" src="assets/bgm.mp3" loop preload="auto" playsinline></audio>
+  <button class="music-btn" id="musicBtn" type="button" aria-label="音乐开关">♪</button>
   <div class="hearts" id="hearts"></div>
 
   <div class="stage">
     <section class="cover" id="cover">
       <div class="seal">♥</div>
-      <h1 class="brand">给我们的爱情</h1>
-      <p class="tag">情侣专属 · 只给你看</p>
+      <h1 class="brand">老婆专属</h1>
+      <p class="tag">只写给你 · 一个人看</p>
       <button class="open-btn" id="openBtn" type="button">拆开这封信</button>
-      <p class="hint">轻轻点一下</p>
+      <p class="hint">点开后会有背景音乐哦</p>
     </section>
 
     <section class="letter" id="letter">
       <div class="hero">
         <img src="assets/hero.jpg" alt="我们的黄昏" />
-        <div class="hero-caption">愿和你，把日子过成情话</div>
+        <div class="hero-caption">给我最爱的老婆</div>
       </div>
 
       <div class="card">
-        <h2 class="section-title">想对你说</h2>
+        <h2 class="section-title">想对老婆说</h2>
         <div class="typebox" id="typebox"><span id="typed"></span><span class="caret"></span></div>
       </div>
 
       <div class="card lines" id="lines">
         <h2 class="section-title">一点点表白</h2>
-        <p>喜欢你，不是一时冲动，是每次想分享好事时，第一个想到的都是你。</p>
+        <p>老婆，喜欢你不是一时冲动，是每次想分享好事时，第一个想到的都是你。</p>
         <p>你笑起来的样子，会让我觉得整个世界都软下来了。</p>
         <p>我想把普通的日常，都过成我们的纪念日。</p>
         <p>以后的路很长，我想牵着你的手，慢慢走，也大胆爱。</p>
@@ -361,14 +387,14 @@
           <p>情爱多一点也可以——想你想得认真，也想得有点坏。</p>
         </div>
         <div class="chips">
-          <span class="chip">只对你撒娇</span>
+          <span class="chip">老婆专属</span>
           <span class="chip">只给你看</span>
           <span class="chip">再靠近一点点</span>
         </div>
       </div>
 
       <div class="finale">
-        <div class="big">我喜欢你</div>
+        <div class="big">我爱你，老婆</div>
         <div class="sub">比昨天更多 · 比明天更真</div>
       </div>
     </section>
@@ -390,12 +416,34 @@
       }
 
       var confessions = [
-        "情爱多一点，也可以色色一点。",
+        "老婆，情爱多一点，也可以色色一点。",
         "我想把所有温柔，都留给你。",
         "今晚的星星里，藏着一句：我超想你。"
       ];
       var typed = document.getElementById("typed");
       var confIndex = 0, charIndex = 0, deleting = false;
+      var bgm = document.getElementById("bgm");
+      var musicBtn = document.getElementById("musicBtn");
+      bgm.volume = 0.45;
+
+      function setMusicUi(playing) {
+        musicBtn.classList.toggle("on", playing);
+        musicBtn.textContent = playing ? "♪" : "🔇";
+      }
+
+      function playBgm() {
+        var p = bgm.play();
+        if (p && p.then) {
+          p.then(function () { setMusicUi(true); }).catch(function () { setMusicUi(false); });
+        } else {
+          setMusicUi(!bgm.paused);
+        }
+      }
+
+      musicBtn.addEventListener("click", function () {
+        if (bgm.paused) playBgm();
+        else { bgm.pause(); setMusicUi(false); }
+      });
 
       function typeLoop() {
         var current = confessions[confIndex];
@@ -426,6 +474,8 @@
       document.getElementById("openBtn").addEventListener("click", function () {
         var cover = document.getElementById("cover");
         var letter = document.getElementById("letter");
+        musicBtn.classList.add("show");
+        playBgm();
         cover.classList.add("hide");
         setTimeout(function () {
           cover.style.display = "none";
