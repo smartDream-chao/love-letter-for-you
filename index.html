@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+  <meta name="format-detection" content="telephone=no" />
+  <title>给我们的爱情</title>
+  <style>
+    :root {
+      --rose: #c43b5a;
+      --blush: #ff8fa3;
+      --cream: #fff4f6;
+      --ink: #3a1f28;
+      --wine: #7a1f3d;
+      --glow: rgba(255, 143, 163, 0.45);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      min-height: 100%;
+      background: #1a0b12;
+      color: var(--cream);
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
+    }
+
+    body {
+      background:
+        radial-gradient(ellipse 120% 80% at 50% -10%, #5a2038 0%, transparent 55%),
+        radial-gradient(ellipse 80% 50% at 100% 100%, #3a1528 0%, transparent 50%),
+        linear-gradient(180deg, #2a101c 0%, #12070d 100%);
+    }
+
+    .stage {
+      max-width: 440px;
+      margin: 0 auto;
+      padding: 24px 20px 80px;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    .hearts {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+    .heart {
+      position: absolute;
+      bottom: -40px;
+      font-size: 14px;
+      opacity: 0;
+      animation: rise linear infinite;
+      color: var(--blush);
+      text-shadow: 0 0 12px var(--glow);
+    }
+    @keyframes rise {
+      0% { transform: translateY(0) scale(0.6) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.85; }
+      100% { transform: translateY(-110vh) scale(1.2) rotate(25deg); opacity: 0; }
+    }
+
+    .cover, .letter {
+      position: relative;
+      z-index: 1;
+    }
+
+    .cover {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 48px);
+      text-align: center;
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .cover.hide {
+      opacity: 0;
+      transform: scale(0.96) translateY(-20px);
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+    }
+
+    .seal {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 35% 30%, #ffb3c1, var(--rose) 55%, var(--wine));
+      box-shadow:
+        0 0 0 6px rgba(255, 143, 163, 0.2),
+        0 18px 40px rgba(196, 59, 90, 0.35);
+      display: grid;
+      place-items: center;
+      font-size: 36px;
+      animation: pulse 2.4s ease-in-out infinite;
+      margin-bottom: 28px;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+
+    .brand {
+      font-family: "Songti SC", "STSong", "PingFang SC", serif;
+      font-size: clamp(34px, 9vw, 44px);
+      letter-spacing: 0.12em;
+      color: #ffe4ea;
+      text-shadow: 0 8px 30px rgba(255, 120, 150, 0.35);
+      margin-bottom: 12px;
+      animation: fadeUp 1s ease both;
+    }
+    .tag {
+      color: rgba(255, 220, 228, 0.78);
+      font-size: 14px;
+      letter-spacing: 0.28em;
+      margin-bottom: 36px;
+      animation: fadeUp 1s ease 0.15s both;
+    }
+    .hint {
+      color: rgba(255, 200, 210, 0.7);
+      font-size: 13px;
+      margin-top: 18px;
+      animation: blink 1.8s ease-in-out infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 0.45; }
+      50% { opacity: 1; }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .open-btn {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      padding: 14px 34px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ff7a95, #c43b5a 60%, #8b2344);
+      color: white;
+      font-size: 16px;
+      letter-spacing: 0.18em;
+      box-shadow: 0 12px 28px rgba(196, 59, 90, 0.4);
+      animation: fadeUp 1s ease 0.3s both;
+      transition: transform 0.2s ease;
+    }
+    .open-btn:active { transform: scale(0.97); }
+
+    .letter {
+      display: none;
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    .letter.show {
+      display: block;
+      animation: fadeUp 0.9s ease both;
+    }
+
+    .hero {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      border-radius: 22px;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 28px;
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.35);
+    }
+    .hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      animation: kenburns 14s ease-in-out infinite alternate;
+    }
+    @keyframes kenburns {
+      from { transform: scale(1); }
+      to { transform: scale(1.08); }
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 45%, rgba(18, 7, 13, 0.82));
+    }
+    .hero-caption {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      z-index: 2;
+      font-family: "Songti SC", "STSong", serif;
+      font-size: 22px;
+      letter-spacing: 0.08em;
+    }
+
+    .card {
+      background: rgba(255, 244, 246, 0.08);
+      border: 1px solid rgba(255, 180, 195, 0.18);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 22px 20px;
+      margin-bottom: 18px;
+    }
+
+    .section-title {
+      font-family: "Songti SC", "STSong", serif;
+      font-size: 20px;
+      color: #ffd0da;
+      margin-bottom: 14px;
+      letter-spacing: 0.1em;
+    }
+
+    .lines p {
+      line-height: 1.9;
+      color: rgba(255, 235, 240, 0.92);
+      font-size: 15px;
+      margin-bottom: 12px;
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    .lines p.show {
+      animation: fadeUp 0.7s ease both;
+    }
+
+    .gallery {
+      display: grid;
+      gap: 12px;
+    }
+    .gallery img {
+      width: 100%;
+      border-radius: 16px;
+      display: block;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+    }
+
+    .typebox {
+      min-height: 3.6em;
+      font-family: "Songti SC", "STSong", serif;
+      font-size: 18px;
+      line-height: 1.8;
+      color: #ffe7ec;
+      letter-spacing: 0.04em;
+    }
+    .caret {
+      display: inline-block;
+      width: 2px;
+      height: 1.05em;
+      background: var(--blush);
+      margin-left: 2px;
+      vertical-align: -2px;
+      animation: caret 0.9s step-end infinite;
+    }
+    @keyframes caret {
+      50% { opacity: 0; }
+    }
+
+    .spicy {
+      position: relative;
+      overflow: hidden;
+    }
+    .spicy::before {
+      content: "";
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      right: -40px;
+      top: -50px;
+      background: radial-gradient(circle, rgba(255,120,150,0.25), transparent 70%);
+      pointer-events: none;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 120, 150, 0.14);
+      border: 1px solid rgba(255, 160, 180, 0.25);
+      color: #ffd6de;
+      font-size: 13px;
+    }
+
+    .finale {
+      text-align: center;
+      padding: 28px 10px 10px;
+    }
+    .finale .big {
+      font-family: "Songti SC", "STSong", serif;
+      font-size: 28px;
+      letter-spacing: 0.14em;
+      color: #ffe4ea;
+      margin-bottom: 10px;
+      animation: pulse 2.8s ease-in-out infinite;
+    }
+    .finale .sub {
+      color: rgba(255, 210, 220, 0.75);
+      font-size: 14px;
+      letter-spacing: 0.2em;
+    }
+
+    .tap {
+      margin-top: 16px;
+      text-align: center;
+      color: rgba(255, 190, 205, 0.7);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="hearts" id="hearts"></div>
+
+  <div class="stage">
+    <section class="cover" id="cover">
+      <div class="seal">♥</div>
+      <h1 class="brand">给我们的爱情</h1>
+      <p class="tag">情侣专属 · 只给你看</p>
+      <button class="open-btn" id="openBtn" type="button">拆开这封信</button>
+      <p class="hint">轻轻点一下</p>
+    </section>
+
+    <section class="letter" id="letter">
+      <div class="hero">
+        <img src="assets/hero.jpg" alt="我们的黄昏" />
+        <div class="hero-caption">愿和你，把日子过成情话</div>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title">想对你说</h2>
+        <div class="typebox" id="typebox"><span id="typed"></span><span class="caret"></span></div>
+      </div>
+
+      <div class="card lines" id="lines">
+        <h2 class="section-title">一点点表白</h2>
+        <p>喜欢你，不是一时冲动，是每次想分享好事时，第一个想到的都是你。</p>
+        <p>你笑起来的样子，会让我觉得整个世界都软下来了。</p>
+        <p>我想把普通的日常，都过成我们的纪念日。</p>
+        <p>以后的路很长，我想牵着你的手，慢慢走，也大胆爱。</p>
+      </div>
+
+      <div class="card gallery">
+        <h2 class="section-title">靠近一点</h2>
+        <img src="assets/hands.jpg" alt="手心的小小心意" />
+        <p class="tap">我们的距离，刚好适合心动</p>
+      </div>
+
+      <div class="card spicy">
+        <h2 class="section-title">也可以，色色一点</h2>
+        <div class="lines" id="spicyLines">
+          <p>想把你抱紧一点，再紧一点，听到心跳和呼吸叠在一起。</p>
+          <p>想在夜里偷偷亲你，亲到你耳朵发热，还装作若无其事。</p>
+          <p>情爱多一点也可以——想你想得认真，也想得有点坏。</p>
+        </div>
+        <div class="chips">
+          <span class="chip">只对你撒娇</span>
+          <span class="chip">只给你看</span>
+          <span class="chip">再靠近一点点</span>
+        </div>
+      </div>
+
+      <div class="finale">
+        <div class="big">我喜欢你</div>
+        <div class="sub">比昨天更多 · 比明天更真</div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      var hearts = document.getElementById("hearts");
+      var symbols = ["♥", "♡", "❤"];
+      for (var i = 0; i < 18; i++) {
+        var el = document.createElement("span");
+        el.className = "heart";
+        el.textContent = symbols[i % symbols.length];
+        el.style.left = Math.random() * 100 + "%";
+        el.style.fontSize = 12 + Math.random() * 18 + "px";
+        el.style.animationDuration = 7 + Math.random() * 8 + "s";
+        el.style.animationDelay = Math.random() * 6 + "s";
+        hearts.appendChild(el);
+      }
+
+      var confessions = [
+        "情爱多一点，也可以色色一点。",
+        "我想把所有温柔，都留给你。",
+        "今晚的星星里，藏着一句：我超想你。"
+      ];
+      var typed = document.getElementById("typed");
+      var confIndex = 0, charIndex = 0, deleting = false;
+
+      function typeLoop() {
+        var current = confessions[confIndex];
+        if (!deleting) {
+          typed.textContent = current.slice(0, ++charIndex);
+          if (charIndex === current.length) {
+            deleting = true;
+            setTimeout(typeLoop, 1800);
+            return;
+          }
+        } else {
+          typed.textContent = current.slice(0, --charIndex);
+          if (charIndex === 0) {
+            deleting = false;
+            confIndex = (confIndex + 1) % confessions.length;
+          }
+        }
+        setTimeout(typeLoop, deleting ? 36 : 70);
+      }
+
+      function revealLines(root) {
+        var ps = root.querySelectorAll("p");
+        ps.forEach(function (p, idx) {
+          setTimeout(function () { p.classList.add("show"); }, 280 + idx * 420);
+        });
+      }
+
+      document.getElementById("openBtn").addEventListener("click", function () {
+        var cover = document.getElementById("cover");
+        var letter = document.getElementById("letter");
+        cover.classList.add("hide");
+        setTimeout(function () {
+          cover.style.display = "none";
+          letter.classList.add("show");
+          typeLoop();
+          revealLines(document.getElementById("lines"));
+          revealLines(document.getElementById("spicyLines"));
+          try {
+            if (navigator.vibrate) navigator.vibrate(18);
+          } catch (e) {}
+        }, 520);
+      });
+    })();
+  </script>
+</body>
+</html>
